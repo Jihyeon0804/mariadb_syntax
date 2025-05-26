@@ -83,6 +83,7 @@ select * from post where created_time like '2025-05%'; -- 문자열처럼 조회
 -- 위에처럼 조회하는 경우 created_time <= '2025-05-20'는 '2025-05-20 00:00:00' 까지만 포함임
 -- 날짜만 입력하여 조회시 시간 부분은 00:00:00이 자동으로 붙음
 select * from post where created_time >= '2025-05-01' and created_time < '2025-05-21';
+select * from post where date_format(created_time, '%Y-%m-%d') between '2025-05-01' and '2025-05-20'; -- 위 쿼리문과 동일
 
 select date_format(created_time, '%Y-%m-%d') from post; -- 일자만 조회
 select date_format(created_time, '%H:%i:%s') from post; -- 시간만 조회
