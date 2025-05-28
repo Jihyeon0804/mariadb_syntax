@@ -49,3 +49,96 @@ order by PUBLISHED_DATE;
 
 -- 없어진 기록 찾기
 SELECT o.animal_id, o.name from animal_outs o where o.animal_id not in (select animal_id from animal_ins);
+
+
+-- union : 두 테이블의 select 결과를 횡으로 결합 (기본적으로 distinct 적용)
+-- union 시킬 때 컬럼읙 개수와 컬럼의 타입이 같아야 함
+select name, email from author union select title, content from post;
+
+-- union all : 중복까지 모두 포함
+select name, email from author union all select title, content from post;
+
+-- 서브쿼리 : select문 안에 또 다른 select 문을 서브쿼리라 한다.
+-- where 절 안에 서브쿼리
+-- 한 번이라도 글을 쓴 author 목록 조회
+select distinct a.* from author a inner join post p on a.id = p.author_id;
+-- null 값은 in 조건절에서 자동으로 제외
+select * from author where id in (select author_id from post);
+
+-- 컬럼 위치에 서브쿼리
+-- author의 email과 author 별로 본인의 쓴 글의 개수를 출력
+select email, (select count(*) from post p where p.author_id = a.id) from author a;
+
+-- from 절 위치에 서브쿼리
+select a.* from (select * from author where id > 5) as a;
+
+-- group by 컬럼명 : 특정 컬러믕로 데이터를 그룹화하여, 하나의 행(row)처럼 취급 (보통 기준이 되는 컬럼밖에 조회할 수 없음)
+select author_id from post group by author_id;
+-- 보통 아래와 같이 집계 합수(그룹화한 행 끼리)와 같이 많이 사용
+select author_id, count(*) from post group by author_id;
+
+-- 집계 함수
+-- null은 count에서 제외
+select count(*) from author; -- 행의 개수
+select sum(price) from post; -- 합계
+select avg(price) from post; -- 평균
+select round(avg(price), 3) from post; -- 소수점 3번째 자리에서 반올림
+
+
+-- group by와 집계 함수
+select author_id, count(*), sum(price) from post group by author_id;
+
+-- where와 group by (전체 데이터에 대한 조건이면 where 절은 group by 앞에, 그룹화한 데이터에 대한 조건이면 group by 뒤에 위치)
+-- 날짜별 post 글의 개수 출력 (null은 제외)
+select date_format(created_time, '%Y-%m-%d') as day, count(*) from post where created_time is not null group by day;
+
+-- 자동차 종류 별 특정 옵션이 포함된 자동차 수 구하기
+-- 입양 시각 구하기(1)
+select date_format(DATETIME, '%H')/1 as HOUR, count(1) as COUNT
+from ANIMAL_OUTS 
+group by HOUR
+having HOUR between 9 and 19
+order by HOUR;
+
+-- group by와 having
+-- having은 group by를 통해 나온 집계값에 대한 조건
+-- 글을 2번 이상 쓴 사람의 ID 찾기
+select author_id, count(*) from post group by author_id having count(*) >= 2;
+
+-- 동명 동물 수 찾기
+select NAME, count(NAME) as COUNT
+from ANIMAL_INS
+group by NAME
+having COUNT >= 2
+order by NAME;
+
+-- 카테고리 별 도서 판매량 집계하기
+select b.CATEGORY, sum(s.SALES) as TOTAL_SALES 
+from BOOK b
+inner join BOOK_SALES s
+on b.BOOK_ID = s.BOOK_ID
+where date_format(s.SALES_DATE, '%Y-%m') = '2022-01'
+group by b.CATEGORY
+order by b.CATEGORY;
+
+-- 조건에 맞는 사용자와 총 거래금액 조회하기
+select u.USER_ID, u.NICKNAME, sum(b.PRICE) as TOTAL_SALES
+from USED_GOODS_BOARD b
+inner join USED_GOODS_USER u
+on b.WRITER_ID = u.USER_ID
+where b.STATUS = 'DONE'
+group by u.USER_ID
+having TOTAL_SALES >= 700000
+order by TOTAL_SALES;
+
+-- 다중열 group by
+-- group by 첫번째 컬럼, 두번째 컬럼 : 첫번째 컬럼으로 먼저  grouping 한 이후에 두번째 컬럼으로 grouping
+-- post 테이블에서 작성자 별로 만든 제목의 개수를 출력하시오
+select author_id, title, count(*) from post group by author_id, title;
+
+-- 재구매가 일어난 상품과 회원 리스트 구하기
+select USER_ID, PRODUCT_ID
+from ONLINE_SALE
+group by USER_ID, PRODUCT_ID
+having count(*) >= 2
+order by USER_ID, PRODUCT_ID desc;
