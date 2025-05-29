@@ -21,12 +21,12 @@ select * from author where name = "hong" and email = "hong@naver.com";
 -- 이 경우 db엔진에서 최적의 알고리즘 실행(알아서 해줌)
 select * from author where name = "hong" and email = "hong@naver.com";
 
--- 복합 인덱스스
+-- 복합 인덱스
 -- index는 한 컬럼 뿐만 아니라 두 컬럼을 대상으로 한 개의 index를 설정하는 것도 가능
--- 이 경우 두 컬럼을 and 조건으로 조회해야만 index를 사용
+-- 둘 중 하나의 컬럼만 사용해도 index 사용됨
 create index 인덱스명 on 테이블명(컬럼1, 컬럼2);
 
--- 기존 테이블 삭제 훟 아래 테이블로 신규 생성
+-- 기존 테이블 삭제 후 아래 테이블로 신규 생성
 create table author (id bigint auto_increment, email varchar(255), name varchar(255), primary key(id));
 
 -- index 테스트 시나리오
