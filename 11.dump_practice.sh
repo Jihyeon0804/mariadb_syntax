@@ -4,7 +4,7 @@ mysqldump -u root -p board > mydumpfile.sql
 ## 도커
 docker exec -it 컨테이너ID mariadb-dump -u root -p board > mydumpfile.sql
 
-# 덤프파일 적용 (복원)
+# 덤프파일 적용(복원)
 mysql -u root -p 스키마명 < 덤프파일명
 mysql -u root -p board < mydumpfile.sql
 ## 도커

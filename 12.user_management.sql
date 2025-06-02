@@ -12,7 +12,9 @@ grant all privileges on board.* to 'jihyeon00'@'%';
 
 -- 사용자 권한 회수
 revoke select on board.author from 'jihyeon00'@'%';
+
 -- 사용자 권한 조회
 show grants from 'jihyeon00'@'%';
+
 -- 사용자 계정 삭제
 drop user 'jihyeon00'@'%';
