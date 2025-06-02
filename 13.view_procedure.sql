@@ -1,5 +1,5 @@
 -- view : 실제 데이터를 참조만 하는 가상의 테이블, SELECT만 가능
--- 사용 목적 : 1) 복잡한 쿼리 사전 생성   2) 권한 분리리
+-- 사용 목적 : 1) 복잡한 쿼리 사전 생성   2) 권한 분리
 
 -- view 생성
 create view author_for_view as select name, email from author;

@@ -129,5 +129,3 @@ sismember posting:likes:1 a1@naver.com
 sadd posting:likes:1 a1@naver.com
 # 좋아요한 사람을 클릭하면
 sismember posting:likes:1
-
-# zset : sorted set
